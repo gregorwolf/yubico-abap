@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<CLAS CLSNAME="ZCL_AUTH_YUBICO" VERSION="1" LANGU="E" DESCRIPT="Yubico Authentication" UUID="DD7F83EFD8AFCDF1B346000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="DEVELOPER" CREATEDON="20080705" CHANGEDON="00000000" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_AUTH_YUBICO definition
+  public
+  create public .
+
+*&quot;* public components of class ZCL_AUTH_YUBICO
+*&quot;* do not include other source files here!!!
+public section.
+
+  methods CONSTRUCTOR .
+  methods GET_LAST_RESPONSE
+    returning
+      value(RESPONSE) type STRING .
+  methods VERIFY
+    importing
+      value(IV_TOKEN) type STRING
+    exporting
+      value(EV_AUTHENTICATED) type FLAG
+      value(EV_SIGNATURE) type FLAG .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_AUTH_YUBICO
+*&quot;* do not include other source files here!!!
+protected section.
+
+  data LV_ID type STRING .
+  data LV_KEY type STRING .
+  data LV_RESPONSE type STRING .</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_AUTH_YUBICO
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="LV_ID" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="LV_KEY" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="LV_RESPONSE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+
+*  Copyright (c) 2008 Gregor Wolf
+*
+*  Permission is hereby granted, free of charge, to any person
+*  obtaining a copy of this software and associated documentation
+*  files (the &quot;Software&quot;), to deal in the Software without
+*  restriction, including without limitation the rights to use,
+*  copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the
+*  Software is furnished to do so, subject to the following
+*  conditions:
+*
+*  The above copyright notice and this permission notice shall be
+*  included in all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+*  OTHER DEALINGS IN THE SOFTWARE.
+
+  DATA: ls_yubikey_apikey TYPE zyubikey_apikey.
+
+  SELECT SINGLE * FROM zyubikey_apikey INTO ls_yubikey_apikey.
+
+  lv_id = ls_yubikey_apikey-id.
+  CONDENSE lv_id.
+  lv_key = ls_yubikey_apikey-api_key.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="GET_LAST_RESPONSE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="GET_LAST_RESPONSE" SCONAME="RESPONSE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method GET_LAST_RESPONSE.
+*  Copyright (c) 2008 Gregor Wolf
+*
+*  Permission is hereby granted, free of charge, to any person
+*  obtaining a copy of this software and associated documentation
+*  files (the &quot;Software&quot;), to deal in the Software without
+*  restriction, including without limitation the rights to use,
+*  copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the
+*  Software is furnished to do so, subject to the following
+*  conditions:
+*
+*  The above copyright notice and this permission notice shall be
+*  included in all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+*  OTHER DEALINGS IN THE SOFTWARE.
+  response = lv_response.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="VERIFY" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="VERIFY" SCONAME="IV_TOKEN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="VERIFY" SCONAME="EV_AUTHENTICATED" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" PARDECLTYP="1" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <parameter CLSNAME="ZCL_AUTH_YUBICO" CMPNAME="VERIFY" SCONAME="EV_SIGNATURE" VERSION="1" LANGU="E" DESCRIPT="allgemeines flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20080911" CHANGEDON="00000000" PARDECLTYP="1" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <source>method VERIFY.
+
+*  Copyright (c) 2008 Gregor Wolf
+*
+*  Permission is hereby granted, free of charge, to any person
+*  obtaining a copy of this software and associated documentation
+*  files (the &quot;Software&quot;), to deal in the Software without
+*  restriction, including without limitation the rights to use,
+*  copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the
+*  Software is furnished to do so, subject to the following
+*  conditions:
+*
+*  The above copyright notice and this permission notice shall be
+*  included in all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+*  OTHER DEALINGS IN THE SOFTWARE.
+
+
+  DATA: lv_parameters TYPE string,
+        lv_hash_base64 TYPE string,
+        lv_url TYPE string,
+        lv_response TYPE string,
+        lt_lines TYPE string_table,
+        lv_line TYPE string,
+        lv_check TYPE string,
+        lt_key_value TYPE wdy_key_value_table,
+        ls_key_value LIKE LINE OF lt_key_value.
+
+  DATA: http_client TYPE REF TO if_http_client.
+
+  CONCATENATE &apos;id=&apos; lv_id &apos;&amp;otp=&apos; iv_token INTO lv_parameters.
+
+* Generate Signature
+  IF NOT lv_key IS INITIAL.
+
+    CALL FUNCTION &apos;Z_CALCULATE_HMAC&apos;
+      EXPORTING
+        iv_hash_alg    = &apos;SHA1&apos;
+        iv_message     = lv_parameters
+        iv_key_base64  = lv_key
+      IMPORTING
+        ev_hash_base64 = lv_hash_base64.
+
+    CONCATENATE lv_parameters &apos;&amp;h=&apos; lv_hash_base64 INTO lv_parameters.
+  ENDIF.
+
+  CONCATENATE &apos;http://api.yubico.com/wsapi/verify?&apos; lv_parameters INTO lv_url.
+
+  CALL METHOD cl_http_client=&gt;create_by_url
+    EXPORTING
+      url                = lv_url
+    IMPORTING
+      client             = http_client
+    EXCEPTIONS
+      argument_not_found = 1
+      plugin_not_active  = 2
+      internal_error     = 3
+      others             = 4
+          .
+  IF sy-subrc &lt;&gt; 0.
+*   MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*              WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+
+    exit.
+  ENDIF.
+
+
+  CALL METHOD cl_http_client=&gt;create_by_url
+    EXPORTING
+      url    = lv_url
+    IMPORTING
+      client = http_client
+    EXCEPTIONS
+      OTHERS = 1.
+
+  CALL METHOD http_client-&gt;request-&gt;set_method(
+    if_http_request=&gt;co_request_method_get ).
+* Send the request
+  CALL METHOD http_client-&gt;send
+    EXCEPTIONS
+      http_communication_failure = 1
+      http_invalid_state         = 2.
+* Retrieve the result
+  CALL METHOD http_client-&gt;receive
+    EXCEPTIONS
+      http_communication_failure = 1
+      http_invalid_state         = 2
+      http_processing_failed     = 3.
+
+* Get the return as string
+  lv_response = http_client-&gt;response-&gt;get_cdata( ).
+
+  SPLIT lv_response AT cl_abap_char_utilities=&gt;cr_lf INTO TABLE lt_lines.
+  SORT lt_lines.
+  LOOP AT lt_lines INTO lv_line.
+    REPLACE FIRST OCCURRENCE OF &apos;=&apos; IN lv_line WITH &apos;#&apos;.
+    SPLIT lv_line AT &apos;#&apos; INTO ls_key_value-key ls_key_value-value.
+    APPEND ls_key_value TO lt_key_value.
+  ENDLOOP.
+* Verify signature
+  IF NOT lv_key IS INITIAL.
+    READ TABLE lt_key_value INTO ls_key_value WITH KEY key = &apos;status&apos;.
+    CONCATENATE &apos;status=&apos; ls_key_value-value INTO lv_check.
+    READ TABLE lt_key_value INTO ls_key_value WITH KEY key = &apos;t&apos;.
+    CONCATENATE lv_check &apos;&amp;t=&apos; ls_key_value-value INTO lv_check.
+
+    CALL FUNCTION &apos;Z_CALCULATE_HMAC&apos;
+      EXPORTING
+        iv_hash_alg    = &apos;SHA1&apos;
+        iv_message     = lv_check
+        iv_key_base64  = lv_key
+      IMPORTING
+        ev_hash_base64 = lv_hash_base64.
+
+    READ TABLE lt_key_value INTO ls_key_value WITH KEY key = &apos;h&apos;.
+    IF lv_hash_base64 = ls_key_value-value.
+      ev_signature = &apos;X&apos;.
+    ELSE.
+      ev_signature = &apos;-&apos;.
+    ENDIF.
+  ENDIF.
+
+  READ TABLE lt_key_value INTO ls_key_value WITH KEY key = &apos;status&apos;.
+
+  IF ls_key_value-value = &apos;OK&apos;.
+    ev_authenticated = &apos;X&apos;.
+  ELSE.
+    ev_authenticated = &apos;-&apos;.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+</CLAS>
