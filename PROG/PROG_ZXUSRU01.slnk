@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZXUSRU01" VARCL="X" SUBC="I" APPL="S" CNAM="DEVELOPER" CDAT="20080705" UNAM="BCUSER" UDAT="20080911" VERN="000025" RMAND="001" RLOAD="E" SDATE="20080911" STIME="000306" IDATE="20080911" ITIME="000306" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Include ZXUSRU01" LENGTH="16 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp;  Include           ZXUSRU01
+*&amp;---------------------------------------------------------------------*
+*&amp;  Functionality   |  YubiKey OTP Authentication at SAP GUI Logon     *
+*&amp;---------------------------------------------------------------------*
+
+*  Copyright (c) 2008 Gregor Wolf
+*
+*  Permission is hereby granted, free of charge, to any person
+*  obtaining a copy of this software and associated documentation
+*  files (the &quot;Software&quot;), to deal in the Software without
+*  restriction, including without limitation the rights to use,
+*  copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the
+*  Software is furnished to do so, subject to the following
+*  conditions:
+*
+*  The above copyright notice and this permission notice shall be
+*  included in all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+*  OTHER DEALINGS IN THE SOFTWARE.
+*
+* This Implementation of the user exit SUSR0001 is based on the work
+* posted by Berardi Michele in the SDN Forum Topic
+* &quot;ONE TIME PASSWORD ENHANCEMENT ... A QUICK INTRODUCTION&quot;
+* https://forums.sdn.sap.com/thread.jspa?threadID=865850&amp;tstart=0
+*
+* Original Copyright Notice:
+*&amp;---------------------------------------------------------------------*
+*&amp;  Copyright       |            (C) 2008 Berardi Michele              *
+*&amp;                  |                   mfxaub [----] tin.it           *
+*&amp;                  |  http://berardimichele.interfree.it              *
+*&amp;                  |                    +39 347 319 2000              *
+*&amp;---------------------------------------------------------------------*
+*&amp;                  |                                                  *
+*&amp;                  |  HOW TO INSTALL this &quot;SAP Enhancement&quot;           *
+*&amp;                  |                                                  *
+*&amp;                  ---------------------------------------------------*
+*&amp;                                                                     *
+*&amp; launch the transaction: &quot;CMOD&quot;.                                     *
+*&amp;                                                                     *
+*&amp; Create a new (or modify your) &quot;SAP Enhancement Project&quot;.            *
+*&amp;                                                                     *
+*&amp; Choice this menu voice: &quot;Utilities -&gt; SAP Enhancements&quot;             *
+*&amp;                                                                     *
+*&amp; than press F8 -&gt; select and activate the user exit: &quot;SUSR0001&quot;      *
+*&amp;                                                                     *
+*&amp; (this operation will create/open the &quot;function module&quot;:             *
+*&amp; &quot;EXIT_SAPLSUSF_001&quot;                                                 *
+*&amp;                                                                     *
+*&amp; on the opened source code double-click on the include: &quot;ZXUSRU01&quot;   *
+*&amp; (yes if don&apos;t exist create a new one..)                             *
+*&amp; replace the entire sourcecode of the &quot;ZXUSRU01&quot; with this one.      *
+*&amp;                                                                     *
+*&amp; Go back on your project resume (under cmod transaction)             *
+*&amp; now activate: include, function module                              *
+*&amp; and the entire &quot;SAP Enhancement&quot; created.                           *
+*&amp;---------------------------------------------------------------------*
+
+
+DATA as_user_otp_mode TYPE string.
+
+as_user_otp_mode = &apos;POPUP&apos;.
+
+* OTP SPECIFIC VALUES [1] --BEGIN
+
+DATA ps_user_otp TYPE string VALUE &apos;-&apos;.
+
+DATA ps_user_answer TYPE string VALUE &apos;&apos;.
+
+DATA: lv_authenticated TYPE flag.
+
+* OTP SPECIFIC VALUES [1] ----END
+
+* PRESENTATION SERVER &quot;GET OTP FROM USER&quot; (OTP VALIDATOR) ---------BEGIN
+
+IF as_user_otp_mode EQ &apos;POPUP&apos;.
+
+  CALL FUNCTION &apos;POPUP_TO_GET_VALUE&apos;
+    EXPORTING
+      fieldname           = &apos;YUBIKEY&apos;
+      tabname             = &apos;ZYUBIKEY_STR&apos;
+      titel               = &apos;Please provide your YubiKey&apos;
+      valuein             = &apos;&apos;
+    IMPORTING
+      answer              = ps_user_answer
+      valueout            = ps_user_otp
+    EXCEPTIONS
+      fieldname_not_found = 1
+      OTHERS              = 2.
+
+ENDIF.
+
+CALL FUNCTION &apos;Z_AUTH_YUBICO&apos;
+  EXPORTING
+    iv_token         = ps_user_otp
+  IMPORTING
+    ev_authenticated = lv_authenticated.
+
+
+IF lv_authenticated EQ &apos;X&apos;.
+** To notify the user about a sucessfull login uncomment the following code
+*  CALL FUNCTION &apos;POPUP_TO_INFORM&apos;
+*    EXPORTING
+*      titel = &apos;Welcome!&apos;
+*      txt1  = &apos;&apos;
+*      txt2  = &apos;YubiKey Authentication for SAP (c) 2008 Gregor Wolf&apos;.
+ELSE.
+
+  CALL FUNCTION &apos;POPUP_TO_INFORM&apos;
+    EXPORTING
+      titel = &apos;You are not allowed to log in!&apos;
+      txt1  = &apos;&apos;
+      txt2  = &apos;YubiKey Authentication for SAP (c) 2008 Gregor Wolf&apos;.
+*
+* kick out invalid user session..
+*
+  IF sy-uname &lt;&gt; &apos;SAP*&apos;.
+    CALL &apos;SYST_LOGOFF&apos;.
+  ENDIF.
+
+ENDIF.
+
+* APPLICATION SERVER OTP CHECK ------------END</source>
+</PROG>
